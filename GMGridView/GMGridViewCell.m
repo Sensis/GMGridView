@@ -208,8 +208,8 @@
 {
     self.deleteButton.frame = CGRectMake(offset.x, 
                                          offset.y, 
-                                         self.deleteButton.frame.size.width, 
-                                         self.deleteButton.frame.size.height);
+                                         44,
+                                         44);
 }
 
 - (CGPoint)deleteButtonOffset
