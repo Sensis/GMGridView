@@ -192,7 +192,7 @@
     int col = (int) (relativeLocation.x / (self.itemSize.width + self.itemSpacing)); 
     int row = (int) (relativeLocation.y / (self.itemSize.height + self.itemSpacing));
     
-    int position = col + row * self.numberOfItemsPerRow;
+    long position = col + row * self.numberOfItemsPerRow;
     
     if (position >= [self itemCount] || position < 0) 
     {
