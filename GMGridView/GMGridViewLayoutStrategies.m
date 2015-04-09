@@ -96,13 +96,13 @@
         NSInteger widthSpace, heightSpace;        
         NSInteger top, left, bottom, right;
         
-        widthSpace  = floor((self.gridBounds.size.width  - actualContentSize.width)  / 2.0);
-        heightSpace = floor((self.gridBounds.size.height - actualContentSize.height) / 2.0);
+        widthSpace  = (NSInteger)floor((self.gridBounds.size.width  - actualContentSize.width)  / 2.0);
+        heightSpace = (NSInteger)floor((self.gridBounds.size.height - actualContentSize.height) / 2.0);
         
-        left   = MAX(widthSpace,  self.minEdgeInsets.left);
-        right  = MAX(widthSpace,  self.minEdgeInsets.right);
-        top    = MAX(heightSpace, self.minEdgeInsets.top);
-        bottom = MAX(heightSpace, self.minEdgeInsets.bottom);
+        left   = (NSInteger)MAX(widthSpace,  self.minEdgeInsets.left);
+        right  = (NSInteger)MAX(widthSpace,  self.minEdgeInsets.right);
+        top    = (NSInteger)MAX(heightSpace, self.minEdgeInsets.top);
+        bottom = (NSInteger)MAX(heightSpace, self.minEdgeInsets.bottom);
         
         _edgeInsets = UIEdgeInsetsMake(top, left, bottom, right);
     }
@@ -160,10 +160,10 @@
         _numberOfItemsPerRow++;
     }
     
-    NSInteger numberOfRows = ceil(self.itemCount / (1.0 * self.numberOfItemsPerRow));
+    float numberOfRows = (float)ceil(self.itemCount / (1.0 * self.numberOfItemsPerRow));
     
-    CGSize actualContentSize = CGSizeMake(ceil(MIN(self.itemCount, self.numberOfItemsPerRow) * (self.itemSize.width + self.itemSpacing)) - self.itemSpacing, 
-                               ceil(numberOfRows * (self.itemSize.height + self.itemSpacing)) - self.itemSpacing);
+    CGSize actualContentSize = CGSizeMake(ceilf((float)MIN(self.itemCount, self.numberOfItemsPerRow) * (float)(self.itemSize.width + self.itemSpacing)) - self.itemSpacing,
+                                          ceilf(numberOfRows * (float)(self.itemSize.height + self.itemSpacing)) - self.itemSpacing);
     
     [self setEdgeAndContentSizeFromAbsoluteContentSize:actualContentSize];
 }
@@ -174,8 +174,8 @@
         
     if (self.numberOfItemsPerRow > 0 && position >= 0) 
     {
-        NSUInteger col = position % self.numberOfItemsPerRow; 
-        NSUInteger row = position / self.numberOfItemsPerRow;
+        NSInteger col = position % self.numberOfItemsPerRow;
+        NSInteger row = position / self.numberOfItemsPerRow;
         
         origin = CGPointMake(col * (self.itemSize.width + self.itemSpacing) + self.edgeInsets.left,
                              row * (self.itemSize.height + self.itemSpacing) + self.edgeInsets.top);
@@ -224,10 +224,10 @@
     
     CGFloat firstRow = MAX(0, (int)(contentOffset.y / itemHeight) - 1);
 
-    CGFloat lastRow = ceil((contentOffset.y + self.gridBounds.size.height) / itemHeight);
+    CGFloat lastRow = (CGFloat)ceil((contentOffset.y + self.gridBounds.size.height) / itemHeight);
     
-    NSInteger firstPosition = firstRow * self.numberOfItemsPerRow;
-    NSInteger lastPosition  = ((lastRow + 1) * self.numberOfItemsPerRow);
+    NSUInteger firstPosition = (NSUInteger)firstRow * (NSUInteger)self.numberOfItemsPerRow;
+    NSUInteger lastPosition  = (NSUInteger)((lastRow + 1) * self.numberOfItemsPerRow);
     
     return NSMakeRange(firstPosition, (lastPosition - firstPosition));
 }
@@ -276,10 +276,10 @@
         _numberOfItemsPerColumn++;
     }
     
-    NSInteger numberOfColumns = ceil(self.itemCount / (1.0 * self.numberOfItemsPerColumn));
+    NSInteger numberOfColumns = (NSInteger)ceil(self.itemCount / (1.0 * self.numberOfItemsPerColumn));
             
-    CGSize actualContentSize = CGSizeMake(ceil(numberOfColumns * (self.itemSize.width + self.itemSpacing)) - self.itemSpacing, 
-                               ceil(MIN(self.itemCount, self.numberOfItemsPerColumn) * (self.itemSize.height + self.itemSpacing)) - self.itemSpacing);
+    CGSize actualContentSize = CGSizeMake((CGFloat)ceil(numberOfColumns * (self.itemSize.width + self.itemSpacing)) - self.itemSpacing,
+                               (CGFloat)ceil(MIN(self.itemCount, self.numberOfItemsPerColumn) * (self.itemSize.height + self.itemSpacing)) - self.itemSpacing);
     
     [self setEdgeAndContentSizeFromAbsoluteContentSize:actualContentSize];
 }
@@ -290,8 +290,8 @@
     
     if (self.numberOfItemsPerColumn > 0 && position >= 0) 
     {
-        NSUInteger col = position / self.numberOfItemsPerColumn; 
-        NSUInteger row = position % self.numberOfItemsPerColumn;
+        NSUInteger col = (NSUInteger)(position / self.numberOfItemsPerColumn);
+        NSUInteger row = (NSUInteger)(position % self.numberOfItemsPerColumn);
         
         origin = CGPointMake(col * (self.itemSize.width + self.itemSpacing) + self.edgeInsets.left,
                              row * (self.itemSize.height + self.itemSpacing) + self.edgeInsets.top);
@@ -308,7 +308,7 @@
     int col = (int) (relativeLocation.x / (self.itemSize.width + self.itemSpacing)); 
     int row = (int) (relativeLocation.y / (self.itemSize.height + self.itemSpacing));
     
-    int position = row + col * self.numberOfItemsPerColumn;
+    long position = row + col * self.numberOfItemsPerColumn;
     
     if (position >= [self itemCount] || position < 0) 
     {
@@ -340,10 +340,10 @@
     
     CGFloat firstCol = MAX(0, (int)(contentOffset.x / itemWidth) - 1);
     
-    CGFloat lastCol = ceil((contentOffset.x + self.gridBounds.size.width) / itemWidth);
+    CGFloat lastCol = (CGFloat)ceil((contentOffset.x + self.gridBounds.size.width) / itemWidth);
     
-    NSInteger firstPosition = firstCol * self.numberOfItemsPerColumn;
-    NSInteger lastPosition  = ((lastCol + 1) * self.numberOfItemsPerColumn);
+    NSUInteger firstPosition = (NSUInteger)(firstCol * self.numberOfItemsPerColumn);
+    NSUInteger lastPosition  = (NSUInteger)((lastCol + 1) * self.numberOfItemsPerColumn);
     
     return NSMakeRange(firstPosition, (lastPosition - firstPosition));
 }
@@ -374,7 +374,7 @@
     
     _numberOfItemsPerRow = 1;
     
-    NSInteger gridContentMaxWidth = self.gridBounds.size.width - self.minEdgeInsets.right - self.minEdgeInsets.left;
+    NSInteger gridContentMaxWidth = (NSInteger)(self.gridBounds.size.width - self.minEdgeInsets.right - self.minEdgeInsets.left);
     
     while ((self.numberOfItemsPerRow + 1) * (self.itemSize.width + self.itemSpacing) - self.itemSpacing <= gridContentMaxWidth)
     {
@@ -382,18 +382,18 @@
     }
     
     _numberOfItemsPerPage = _numberOfItemsPerRow * _numberOfItemsPerColumn;
-    _numberOfPages = ceil(self.itemCount * 1.0 / self.numberOfItemsPerPage);
+    _numberOfPages = (NSInteger)ceil(self.itemCount * 1.0 / self.numberOfItemsPerPage);
     
     CGSize onePageSize = CGSizeMake(self.numberOfItemsPerRow * (self.itemSize.width + self.itemSpacing) - self.itemSpacing, 
                                     self.numberOfItemsPerColumn * (self.itemSize.height + self.itemSpacing) - self.itemSpacing);
     
     if (self.centeredGrid)
     {
-        NSInteger widthSpace, heightSpace;        
-        NSInteger top, left, bottom, right;
+        CGFloat widthSpace, heightSpace;
+        CGFloat top, left, bottom, right;
         
-        widthSpace  = floor((self.gridBounds.size.width  - onePageSize.width)  / 2.0);
-        heightSpace = floor((self.gridBounds.size.height - onePageSize.height) / 2.0);
+        widthSpace  = (CGFloat)floor((self.gridBounds.size.width  - onePageSize.width)  / 2.0);
+        heightSpace = (CGFloat)floor((self.gridBounds.size.height - onePageSize.height) / 2.0);
         
         left   = MAX(widthSpace,  self.minEdgeInsets.left);
         right  = MAX(widthSpace,  self.minEdgeInsets.right);
@@ -413,7 +413,7 @@
 
 - (NSInteger)pageForItemAtIndex:(NSInteger)index
 {    
-    return MAX(0, floor(index * 1.0 / self.numberOfItemsPerPage * 1.0));
+    return MAX(0, (NSInteger)floor(index * 1.0 / self.numberOfItemsPerPage * 1.0));
 }
 
 - (CGPoint)originForItemAtColumn:(NSInteger)column row:(NSInteger)row page:(NSInteger)page 
@@ -442,17 +442,17 @@
 - (NSInteger)rowForItemAtPosition:(NSInteger)position
 {
     position %= self.numberOfItemsPerPage;
-    return floor(position / self.numberOfItemsPerRow);
+    return (NSInteger)floor(position / self.numberOfItemsPerRow);
 }
 
 - (CGPoint)originForItemAtPosition:(NSInteger)position
 {
-    NSUInteger page = [self pageForItemAtIndex:position];
+    NSInteger page = [self pageForItemAtIndex:position];
     
     position %= self.numberOfItemsPerPage;
         
-    NSUInteger row = [self rowForItemAtPosition:position];
-    NSUInteger column = [self columnForItemAtPosition:position];
+    NSInteger row = [self rowForItemAtPosition:position];
+    NSInteger column = [self columnForItemAtPosition:position];
     
     CGPoint origin = [self originForItemAtColumn:column row:row page:page];
     
@@ -461,7 +461,7 @@
 
 - (NSInteger)itemPositionFromLocation:(CGPoint)location
 {
-    CGFloat page = 0;
+    NSInteger page = 0;
     while ((page + 1) * self.gridBounds.size.width < location.x) 
     {
         page++;
@@ -475,7 +475,7 @@
     int col = (int) (relativeLocation.x / (self.itemSize.width + self.itemSpacing)); 
     int row = (int) (relativeLocation.y / (self.itemSize.height + self.itemSpacing));
     
-    int position = [self positionForItemAtColumn:col row:row page:page];
+    long position = [self positionForItemAtColumn:col row:row page:page];
  
     if (position >= [self itemCount] || position < 0) 
     {
@@ -503,12 +503,12 @@
     CGPoint contentOffset = CGPointMake(MAX(0, offset.x), 
                                         MAX(0, offset.y));
     
-    NSInteger page = floor(contentOffset.x / self.gridBounds.size.width);
+    double page = floor(contentOffset.x / self.gridBounds.size.width);
     
-    NSInteger firstPosition = MAX(0, (page - 1) * self.numberOfItemsPerPage);
-    NSInteger lastPosition  = MIN(firstPosition + 3 * self.numberOfItemsPerPage, self.itemCount);
+    NSInteger firstPosition = (NSInteger)MAX(0, (page - 1) * self.numberOfItemsPerPage);
+    NSUInteger lastPosition  = (NSUInteger)MIN(firstPosition + 3 * self.numberOfItemsPerPage, self.itemCount);
     
-    return NSMakeRange(firstPosition, (lastPosition - firstPosition));
+    return NSMakeRange((NSUInteger)firstPosition, (lastPosition - (NSUInteger)firstPosition));
 }
 
 @end
@@ -561,7 +561,7 @@
 - (NSInteger)columnForItemAtPosition:(NSInteger)position
 {
     position %= self.numberOfItemsPerPage;
-    return floor(position / self.numberOfItemsPerColumn);
+    return (NSInteger)floor(position / self.numberOfItemsPerColumn);
 }
 
 - (NSInteger)rowForItemAtPosition:(NSInteger)position

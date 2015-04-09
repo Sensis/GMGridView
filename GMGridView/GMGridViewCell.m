@@ -76,12 +76,13 @@
         self.editing = NO;
         
         UIButton *deleteButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        self.deleteButton = deleteButton;
-        [self.deleteButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-        self.deleteButtonIcon = nil;
-        self.deleteButtonOffset = CGPointMake(-5, -5);
-        self.deleteButton.alpha = 0;
+        [deleteButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        deleteButtonOffset = CGPointMake(-5, -5);
+        deleteButton.alpha = 0;
+        
         [self addSubview:deleteButton];
+        self.deleteButton = deleteButton;
+        
         [deleteButton addTarget:self action:@selector(actionDelete) forControlEvents:UIControlEventTouchUpInside];
     }
     return self;
@@ -256,7 +257,7 @@
 	
 	[self.contentView recursiveEnumerateSubviewsUsingBlock:^(UIView *view, BOOL *stop) {
 		if ([view respondsToSelector:@selector(setHighlighted:)]) {
-			[(UIControl*)view setHighlighted:highlighted];
+			[(UIControl*)view setHighlighted:self->highlighted];
 		}
 	}];
 }
@@ -327,7 +328,7 @@
         
         _inFullSizeMode = NO;
         self.fullSizeView.alpha = 0;
-        self.contentView.alpha  = 0.6;
+        self.contentView.alpha  = (float)0.6;
         
         [UIView animateWithDuration:0.3 
                          animations:^{
@@ -343,16 +344,16 @@
 
 - (void)stepToFullsizeWithAlpha:(CGFloat)alpha
 {
-    return; // not supported anymore - to be fixed
-    
-    if (![self isInFullSizeMode]) 
-    {
-        alpha = MAX(0, alpha);
-        alpha = MIN(1, alpha);
-        
-        self.fullSizeView.alpha = alpha;
-        self.contentView.alpha  = 1.4 - alpha;
-    }
+    return;
+// not supported anymore - to be fixed
+//    if (![self isInFullSizeMode]) 
+//    {
+//        alpha = MAX(0, alpha);
+//        alpha = MIN(1, alpha);
+//        
+//        self.fullSizeView.alpha = alpha;
+//        self.contentView.alpha  = (float)1.4 - alpha;
+//    }
 }
 
 @end
